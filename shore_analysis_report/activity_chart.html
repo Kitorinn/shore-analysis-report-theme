@@ -1,0 +1,24 @@
+<div class="chart-section">
+    {% for item in chart_data %}
+    {% set bar_percentage = item.percentage | float %}
+    {% if bar_percentage < 0 %}
+    {% set bar_percentage = 0 %}
+    {% elif bar_percentage > 100 %}
+    {% set bar_percentage = 100 %}
+    {% endif %}
+    {# 按活跃度连续映射：低值绿色，经黄绿色、黄色过渡到高值橙色。 #}
+    {% set bar_hue = 150 - 122 * bar_percentage / 100 %}
+    {% set bar_saturation = 50 + 40 * bar_percentage / 100 %}
+
+    <div class="chart-column" style="--bar-hue: {{ bar_hue }}; --bar-saturation: {{ bar_saturation }}%;">
+        <div class="chart-track">
+            <div class="chart-bar" style="height: {{ bar_percentage }}%;">
+                {% if item.count > 0 %}
+                <div class="chart-value">{{ item.count }}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="chart-label">{{ "%02d" | format(item.hour) }}</div>
+    </div>
+    {% endfor %}
+</div>
